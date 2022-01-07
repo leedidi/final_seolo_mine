@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.seolo.idao.IUpdateDAO">
+	<!-- 해당 인터페이스(ISampleDAO)의 각각 메소드에 어떤 쿼리문(sql)을 매칭시켜줄지 -->
+	<select id="searchId" resultType="com.seolo.personal.PersonalDTO">
+		SELECT PE_ID, NAME, NICKNAME, TEL, EMAIL, ROADADDR, DETAILADDR
+		FROM PERSONAL
+		WHERE PE_ID=#{pe_Id}
+	</select>
+	
+	<update id="update">
+		UPDATE PERSONAL
+		SET NICKNAME=#{nickName}, EMAIL=#{email}, ROADADDR=#{roadAddr}, DETAILADDR=#{detailAddr}
+		WHERE PE_ID=#{pe_Id}
+	</update>
+
+   <select id="confirmPwd" parameterType="com.seolo.personal.PersonalDTO" resultType="java.lang.Integer">
+      SELECT COUNT(*)
+      FROM PERSONAL
+      WHERE PE_ID=#{pe_Id} AND PW=#{pw}
+   </select>
+   
+   <update id="updatePwd" parameterType="com.seolo.personal.PersonalDTO">
+      UPDATE PERSONAL
+      SET PW=#{pw}
+      WHERE PE_ID=#{pe_Id}
+   </update>
+   
+   <!-- 마이페이지 - 나의 신고리스트(최신순 3개) -->
+   <select id="myinfoList" resultType="com.seolo.dto.ReportviewDTO">
+	<![CDATA[  
+		SELECT RPCHECK_NO, CHECK_NO, TITLE, STATUSNAME, REPORTDATE
+		FROM (
+		SELECT RPCHECK_NO, CHECK_NO, TITLE, STATUSNAME, REPORTDATE, REPORTERNAME
+		FROM VIEW_REPORT
+		ORDER BY RPCHECK_NO DESC
+		)
+		WHERE REPORTERNAME=#{reportername} AND ROWNUM>=1 AND ROWNUM<=3
+	]]>
+	</select>
+   	
+</mapper>

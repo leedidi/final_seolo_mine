@@ -157,9 +157,9 @@ crossorigin="anonymous">
                 <tr>
               </tbody>
             </table>
-            </form>
-           
+           </form>
           </div><!-- join_form E  -->
+          
           <div class="text-center">
           	<span id="flagMsg" class="errMsg"></span>
           </div>
@@ -168,6 +168,9 @@ crossorigin="anonymous">
 			<button type="button" class="btn btn-primary" id="pwdUpdateBtn" style="font-size: 13px;">비밀번호 변경</button>&nbsp;&nbsp;&nbsp;
 			<button type="button" class="btn btn-secondary" id="withdrawalBtn" style="font-size: 13px;">탈퇴하기</button>
           </div>
+           
+          <!-- 나의 신고리스트 -->
+          <!-- 최근 3개 신고만 보이도록 함 -->
            <hr style="margin: 30px 0;"><br>
            <!-- <h2 class="sub_tit_txt">나의 신고리스트</h2> -->
            <h4>나의 신고리스트<button type="button" class="btn btn-light" id="myInfoReportBtn" style="float: right;">바로가기▶</button></h4>
@@ -179,34 +182,57 @@ crossorigin="anonymous">
          	<!-- <thead class="thead-dark"> -->
             <tr class="table-primary">
                <th>신고 번호</th>
+               <th>대상 게시물</th>
+               <th style="text-align: center;" width="20%;">신고사유</th>
                <th>신고 상태</th>
-               <th style="text-align: center;">신고사유</th>
-               <th>신고 대상자</th>
                <th>신고일시</th>
+               <th></th>
             </tr>
          </thead>
-         <tbody>
+         <%-- <tbody>
             <tr>
-               <th scope="row">37</th>
-               <td>[미해결]</td>
+               <th scope="row" style="text-align: center">37</th>
+               <!-- <td style="text-align: center">30</td> -->
+               <td style="text-align: center"><button type="button" class="btn btn-light" style="width:38pt; height:23pt; font-size:12px;">
+               이동</button></td>
                <td>영리목적/홍보</td>
-               <td>superman</td>
+               <td><a href="noticeview.action?no_no=${list.no_no}">${list.title }</a></td>
+               <td>[미해결]</td>
                <td>2021-12-13</td>
+               <td><button type="button" class="btn btn-secondary" style="width:38pt; height:23pt; font-size:12px;">취소</button></td>
             </tr>
             <tr>
-               <th scope="row">20</th>
-               <td>[허위신고]</td>
+               <th scope="row" style="text-align: center">20</th>
+               <td style="text-align: center"><button type="button" class="btn btn-light" style="width:38pt; height:23pt; font-size:12px;">
+               이동</button></td>
                <td>도배</td>
-               <td>batman</td>
+               <td>[미해결]</td>
                <td>2021-11-22</td>
+               <td><button type="button" class="btn btn-secondary" style="width:38pt; height:23pt; font-size:12px;">취소</button></td>
             </tr>
             <tr>
-               <th scope="row">13</th>
-               <td>[승인]</td>
+               <th scope="row" style="text-align: center">13</th>
+               <td style="text-align: center"><button type="button" class="btn btn-light" style="width:38pt; height:23pt; font-size:12px;">
+               이동</button></td>
                <td>욕설/인신공격</td>
-               <td>blinkman</td>
+               <td>[승인]</td>
                <td>2021-11-10</td>
+               <td><button type="button" class="btn btn-secondary" style="width:38pt; height:23pt; font-size:12px;">취소</button></td>
             </tr>
+         </tbody> --%>
+         <tbody>
+          	<c:forEach var="list" items="${myinfoList }">
+            <tr>
+               <th scope="row" style="text-align: center">${myinfoList.rpcheck_no }</th>
+               <!-- <td style="text-align: center">30</td> -->
+               <td style="text-align: center"><button type="button" class="btn btn-light" style="width:38pt; height:23pt; font-size:12px;">
+               이동</button></td>
+               <td>영리목적/홍보</td>
+               <td>[미해결]</td>
+               <td>2021-12-13</td>
+               <td><button type="button" class="btn btn-secondary" style="width:38pt; height:23pt; font-size:12px;">취소</button></td>
+            </tr>  
+            </c:forEach>
          </tbody>
       </table>
       <br><br>

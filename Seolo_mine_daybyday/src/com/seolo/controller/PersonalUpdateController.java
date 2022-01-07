@@ -11,6 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.seolo.admin.INoticeDAO;
+import com.seolo.admin.NoticeDTO;
+import com.seolo.dto.AdminDTO;
+import com.seolo.dto.ReportRunDTO;
+import com.seolo.dto.ReportviewDTO;
+import com.seolo.idao.IReportRunDAO;
+import com.seolo.idao.IReportviewDAO;
 import com.seolo.idao.IUpdateDAO;
 import com.seolo.personal.PersonalDTO;
 
@@ -20,10 +27,48 @@ public class PersonalUpdateController
 	@Autowired
 	private SqlSession sqlSession;	// mybatis 객체 의존성(자동) 주입
 	
+   // 마이페이지 - 나의 신고리스트(전체) 조회로 이동 및 전체 조회
+   // 나의 신고리스트 상세 페이지로 바로가기
+	/*
+   @RequestMapping(value = "/myInfoReportList.action", method = RequestMethod.GET)
+	public String myInfoReportAllList(Model model, HttpSession session)
+	{
+	   // 값 못 받아옴^ㅠ^ 일단 주석처리... -> 받아오기 성공! (신고번호 11-15, 신고자 chunsik)
+		IReportviewDAO dao = sqlSession.getMapper(IReportviewDAO.class);
+	   
+		if (session.getAttribute("userLogin")==null)
+		{
+			return "redirect:main.action";
+		}
+		else
+		{
+			PersonalDTO userLogin = (PersonalDTO)session.getAttribute("userLogin");
+			String reportername = userLogin.getPe_Id();
+			//rv.setReportername(reportername); -> 없어도 되는 부분!
+			
+			model.addAttribute("myinfoAllList", dao.myinfoAllList(reportername));
+		}
+		
+		return "WEB-INF/view/MyInfoReportList.jsp";
+	}
+	*/
+	
+	// 마이페이지 내 정보 전체 조회
+	// 다영 수정 중...
 	@RequestMapping(value = "/myinfo.action", method = RequestMethod.GET)
 	public String myInfoForm(Model model, HttpSession session)
 	{
 		IUpdateDAO dao = sqlSession.getMapper(IUpdateDAO.class);
+		
+		//IReportviewDAO mdao = sqlSession.getMapper(IReportviewDAO.class);
+		//-> 빼고 하나로 통일해보자!
+		//-> 통일 해도 안 나옴^ㅠ^
+		
+		//model.addAttribute("myinfoList", mdao.myinfoList());
+		//-> 이러면 주소 하단 버튼부터 암거도 안나옴 ;ㅅ; 왜지...?
+		
+		//mModel.addAttribute("myinfoList", mdao.myinfoList());
+		//-> 모델을 하나 더 추가해 봄. 그래도 안 나옴...
 		
 		if (session.getAttribute("userLogin")==null)	// 로그인 안하면 차단
 		{
@@ -33,9 +78,18 @@ public class PersonalUpdateController
 		{
 			PersonalDTO userLogin = (PersonalDTO)session.getAttribute("userLogin");
 			String pe_Id = userLogin.getPe_Id();
+			String reportername = userLogin.getPe_Id();
 			
 			PersonalDTO user = dao.searchId(pe_Id);
 			model.addAttribute("user", user);
+			
+			// 요기에 추가해봄!!
+			//model.addAttribute("myinfoList", dao.myinfoList(reportername));
+			//-> 얘를 붙이면 주소 하단 버튼부터 나오지 않음... 얘를 빼면 나옴. 뭐가 문제일까,,?
+			
+			//model.addAttribute("myinfoList", mdao.myinfoList());
+			//mModel.addAttribute("myinfoList", mdao.myinfoList());
+			//-> 안댐,,^ㅠ^
 		}
 		
 		return "WEB-INF/view/MyInfo.jsp";
@@ -184,28 +238,40 @@ public class PersonalUpdateController
    }
 	
    // 다영 수정
-   // <나의 신고리스트> 추가
+   // 마이페이지 - <나의 신고리스트> 추가
    
+   // 마이페이지 - 나의 신고리스트(전체) 조회로 이동 및 전체 조회
    // 나의 신고리스트 상세 페이지로 바로가기
    @RequestMapping(value = "/myInfoReportList.action", method = RequestMethod.GET)
-	public String myInfoReportList(Model model, HttpSession session)
+	public String myInfoReportAllList(Model model, HttpSession session)
 	{
-		IUpdateDAO dao = sqlSession.getMapper(IUpdateDAO.class);
-		
-		if (session.getAttribute("userLogin")==null)	// 로그인 안하면 차단
+	   // 값 못 받아옴^ㅠ^ 일단 주석처리... -> 받아오기 성공! (신고번호 11-15, 신고자 chunsik)
+		IReportviewDAO dao = sqlSession.getMapper(IReportviewDAO.class);
+	   
+		if (session.getAttribute("userLogin")==null)
 		{
 			return "redirect:main.action";
 		}
 		else
 		{
 			PersonalDTO userLogin = (PersonalDTO)session.getAttribute("userLogin");
-			String pe_Id = userLogin.getPe_Id();
+			String reportername = userLogin.getPe_Id();
+			//rv.setReportername(reportername); -> 없어도 되는 부분!
 			
-			PersonalDTO user = dao.searchId(pe_Id);
-			model.addAttribute("user", user);
+			model.addAttribute("myinfoAllList", dao.myinfoAllList(reportername));
 		}
 		
 		return "WEB-INF/view/MyInfoReportList.jsp";
 	}
-	
+   
+   // 마이페이지 - 나의 신고리스트(전체)에서 신고 취소
+	@RequestMapping(value = "/myInfoReportDelete.action", method = RequestMethod.GET)
+	public String myInfoReportDelete(ReportRunDTO dto)
+	{
+		IReportRunDAO dao = sqlSession.getMapper(IReportRunDAO.class);
+		
+		dao.delete(dto);
+		
+		return "redirect:myInfoReportList.action";
+	}
 }
