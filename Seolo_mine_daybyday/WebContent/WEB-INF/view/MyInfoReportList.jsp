@@ -48,12 +48,11 @@ integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amn
 		$(".btn-secondary").click(
 				function()
 				{
-					if (confirm("해당 게시물을 정말 취소하시겠습니까?"))
+					if (confirm("해당 신고를 정말 취소하시겠습니까?"))
 					{
 						$(location).attr("href", "myInfoReportDelete.action?rpcheck_no=" + $(this).val());
 					}
 				});
-
 	});
 	
 </script>
@@ -79,46 +78,65 @@ integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amn
    <div class="table-responsive">
        <table class="table table-hover">
          <thead>
-         <!-- <thead class="thead-light"> -->
             <tr class="table-primary">
                <th>신고 번호</th>
                <th>대상 게시물</th>
                <th style="text-align: center;">신고사유</th>
                <th style="text-align: center;" width="40%;">신고 상세 사유</th>
                <th>신고 상태</th>
-               <th>신고일시</th>
+               <th style="text-align:center;">신고일시</th>
                <th></th>
             </tr>
          </thead>
-         <tbody>
-            <c:forEach var="myinfoAllList" items="${myinfoAllList }">
-	            <tr>
-	               <th scope="row" style="text-align: center">${myinfoAllList.rpcheck_no }</th>
-	               <td style="text-align: center">
-	               <button type="button" class="btn btn-light" style="height: 24pt; font-size: 13px;" onclick="location.href='readcheck.action?checkNo=${myinfoAllList.check_no}'">
-	               이동</button></td>
-	               <td>[${myinfoAllList.title }]</td>
-	               <td>${myinfoAllList.why }</td>
-	               <td>${myinfoAllList.statusname }</td>
-	               <td>${myinfoAllList.reportdate }</td>
-	               <%-- <td><button type="button" class="btn btn-secondary" id="cancleBtn" value="${myinfoAllList.rpcheck_no }" 
-	               style="height: 24pt; font-size: 13px;">취소</button></td> --%>
-	               <!-- 취소 버튼은 미해결 일때만 클릭할 수 있게 함 -->
-	               <c:choose>
-	               <c:when test="${myinfoAllList.statusname eq '미해결'}">
-	               		<td><button type="button" class="btn btn-secondary" id="cancleBtn" value="${myinfoAllList.rpcheck_no }" 
-	               		style="height: 24pt; font-size: 13px;">취소</button></td>
-	               </c:when>
-	               <c:otherwise>
-	               		<td><button type="button" class="btn btn-secondary" id="cancleBtn" value="${myinfoAllList.rpcheck_no }" 
-	               		style="height: 24pt; font-size: 13px;" disabled="disabled">취소</button></td>
-	               </c:otherwise>
-	               </c:choose>
-	            </tr>
-	            <tr>
-            </c:forEach>
          
-         </tbody>
+         <c:choose>
+         	<%-- 신고 내용이 없을 때 --%>
+         	<c:when test="${empty myinfoAllList}">
+               <td colspan='7' style="text-align: center;">신고한 내용이 없습니다.</td>
+         	</c:when>
+         
+         	<%-- 신고 내용이 존재할 때 --%>
+         	<c:otherwise>
+         
+	         <tbody>
+	            <c:forEach var="myinfoAllList" items="${myinfoAllList }">
+		            <tr>
+		               <th scope="row" style="text-align: center">${myinfoAllList.rpcheck_no }</th>
+		               <td style="text-align: center">
+		               <button type="button" class="btn btn-light" style="height: 24pt; font-size: 13px;" onclick="location.href='readcheck.action?checkNo=${myinfoAllList.check_no}'">
+		               이동</button></td>
+		               <td style="text-align:center;">${myinfoAllList.title }</td>
+		               <td>${myinfoAllList.why }</td>
+		               
+		               <!-- 신고 상태가 미해결일 시에는 붉은 글씨, 해결된 상태일때는 파란 글씨로 보이게 함 -->
+		               <c:choose>
+		               <c:when test="${myinfoAllList.statusname eq '미해결'}">
+		               		<td style="color:red;font-weight: bold;text-align:center;">[${myinfoAllList.statusname }]</td>
+		               </c:when>
+		               <c:otherwise>
+		               		<td style="color:blue;font-weight: bold;text-align:center;">[${myinfoAllList.statusname }]</td>
+		               </c:otherwise>
+		               </c:choose>
+		               <td>${myinfoAllList.reportdate }</td>
+	
+		               <!-- 취소 버튼은 미해결 일때만 클릭할 수 있게 함 -->
+		               <c:choose>
+		               <c:when test="${myinfoAllList.statusname eq '미해결'}">
+		               		<td><button type="button" class="btn btn-secondary" id="cancleBtn" value="${myinfoAllList.rpcheck_no }" 
+		               		style="height: 24pt; font-size: 13px;">취소</button></td>
+		               </c:when>
+		               <c:otherwise>
+		               		<td><button type="button" class="btn btn-secondary" id="cancleBtn" value="${myinfoAllList.rpcheck_no }" 
+		               		style="height: 24pt; font-size: 13px;" disabled="disabled">취소</button></td>
+		               </c:otherwise>
+		               </c:choose>
+		               
+		            </tr>
+		            <tr>
+	            </c:forEach>
+	         </tbody>
+         </c:otherwise>
+         </c:choose>
       </table>
       <br>
       
@@ -138,10 +156,11 @@ integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amn
             <li class="paginate_item page-item active">
                <a class="paginate_button page-link" aria-controls="datatable" data-dt-idx="1" tabindex="0">1</a>
             </li>
+            <!--
             <li class="paginate_item page-item">
                <a class="paginate_button page-link" aria-controls="datatable" data-dt-idx="2" tabindex="0">2</a>
             </li>
-           <!--  <li class="paginate_item page-item">
+             <li class="paginate_item page-item">
                <a class="paginate_button page-link" aria-controls="datatable" data-dt-idx="2" tabindex="0">3</a>
             </li>
             <li class="paginate_item page-item">
