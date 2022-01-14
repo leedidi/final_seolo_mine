@@ -33,7 +33,7 @@ import com.seolo.personal.PersonalDTO;
 @Controller
 public class ReportController
 {
-	/// mybatis 객체 의존성 (자동) 주입~!!!
+	/// mybatis 객체 의존성 (자동) 주입
 	@Autowired
 	private SqlSession sqlSession;
 	
