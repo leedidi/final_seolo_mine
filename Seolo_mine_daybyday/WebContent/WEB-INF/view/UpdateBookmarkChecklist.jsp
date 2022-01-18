@@ -25,7 +25,7 @@
 		{
 			//$("#readCheck").attr("method", "GET");
 			//$("#readCheck").attr("action", "updatecheck.action?checkNo=" + $(this).val() + "&acNo=" + $("#acNo").val());
-			
+			// 수정하는 쪽으로 수정하기
 		});
 		
 	});
