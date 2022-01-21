@@ -20,12 +20,12 @@
 	
 	$(document).ready(function()
 	{
-		// 북마크 수정하기
+		// 북마크 수정하기 버튼 클릭 시, 북마크 수정 후 해당 북마크 조회로 이동
 		$("#bookUpdateBtn").click(function()
 		{
-			//$("#readCheck").attr("method", "GET");
-			//$("#readCheck").attr("action", "updatecheck.action?checkNo=" + $(this).val() + "&acNo=" + $("#acNo").val());
-			// 수정하는 쪽으로 수정하기
+			$("#readCheck").attr("method", "GET");
+			$("#readCheck").attr("action", "updatechecking.action?checkNo=" + $(this).val() + "&acNo=" + $("#acNo").val());
+			
 		});
 		
 	});

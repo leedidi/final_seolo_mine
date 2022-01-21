@@ -182,7 +182,7 @@ public class ChecklistReadController
 	
 	// 북마크 수정하기 폼으로 이동
 	@RequestMapping(value = "/updatecheck.action", method = RequestMethod.GET)
-	public String UpdateLocal(Model model, HttpSession session, HttpServletRequest request)
+	public String UpdateBookmarkform(Model model, HttpSession session, HttpServletRequest request)
 	{
 		IReadDAO dao = sqlSession.getMapper(IReadDAO.class);
 				
@@ -201,6 +201,15 @@ public class ChecklistReadController
 		
 		return "WEB-INF/view/UpdateBookmarkChecklist.jsp";
 		
+	}
+	
+	// 북마크 DTO
+	// 북마크 수정하기 기능
+	@RequestMapping(value = "/updatechecking.action", method = RequestMethod.GET)
+	public String UpdateBookmark(Model model, HttpSession session, HttpServletRequest request)
+	{
+
+		return "WEB-INF/view/ReadChecklist.jsp";
 	}
 }
 
