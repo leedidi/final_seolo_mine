@@ -15,22 +15,20 @@
 	crossorigin="anonymous">
 	
 <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-
 <script>
 	
 	$(document).ready(function()
 	{
 		// 북마크 수정하기 버튼 클릭 시, 북마크 수정 후 해당 북마크 조회로 이동
-		$("#bookUpdateBtn").click(function()
+		$("#bmUpdateBtn").click(function()
 		{
-			$("#readCheck").attr("method", "GET");
-			$("#readCheck").attr("action", "updatechecking.action?checkNo=" + $(this).val() + "&acNo=" + $("#acNo").val());
-			
+			// 컨트롤러에 수정 기능 추가하기
+			// 추가 후 체크리스트 조회 페이지로 이동
+			$("#readCheck").attr("action", "updatechecking.action?checkNo=" + $(this).val());
+
 		});
 		
 	});
-		
-	
 </script>
 
 </head>
@@ -50,16 +48,20 @@
 
 		<!-- 폼 시작 -->
 		<form class="needs-validation" action="" method="get" id="readCheck">
+		
 		<label for="title"><h4 class="mb-3">북마크 제목</h4></label>
 				<div class="mb-3">
+					<input type="hidden" id="checkNo" name="checkNo" value="${checklist.checkNo}">
+					<input type="hidden" id="acNo" value="${ulogAcNo}">
 					<input type="text" class="form-control" id="title" name="title"
 					 maxlength="25" required="required" value="${bookMark.title }">
 				</div><br>
-	    
+				
 	    <div style="text-align: center;">
-		<button class="btn btn-primary" id="bookUpdateBtn" style="width: 20%; align-content: center;" value="${checklist.checkNo}">북마크 수정하기</button>	
+		<button class="btn btn-primary" id="bmUpdateBtn" style="width: 20%; align-content: center;" value="${checklist.checkNo}">북마크 수정하기</button>	
 		<a class="btn btn-secondary mx-auto" href="javascript:history.back();">뒤로가기</a>
 		</div>
+		</form>
 		
     	<div class="text-right mb-4" style="margin: 20px 0;">
 	    	<a href="#">▲ TOP</a>
