@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.seolo.admin.INoticeDAO;
+import com.seolo.admin.NoticeDTO;
 import com.seolo.dto.BookmarkDTO;
 import com.seolo.dto.ChecklistDTO;
 import com.seolo.dto.LocalDTO;
@@ -203,14 +205,69 @@ public class ChecklistReadController
 		
 	}
 	
-	// 북마크 DTO
+	/*
+	// 공지사항 게시물 수정
+	// → no_no 번호를 jsp 부분에서 히든으로 넣어서 받아옴
+	@RequestMapping(value = "/noticeupdate.action", method = RequestMethod.POST)
+	public String noticeUpdate(NoticeDTO n, HttpSession session)
+	{
+		//○ 세션 확인: 관리자 로그인 정보가 없을 시 → 로그인 페이지로 
+		if(session.getAttribute("adminLogin") == null)
+			return "redirect:adminloginform.action";
+
+		INoticeDAO dao = sqlSession.getMapper(INoticeDAO.class);
+		dao.modify(n);
+
+		return "redirect:noticeview.action?no_no=" + n.getNo_no();
+	}
+	*/
+	
 	// 북마크 수정하기 기능
 	@RequestMapping(value = "/updatechecking.action", method = RequestMethod.GET)
 	public String UpdateBookmark(Model model, HttpSession session, HttpServletRequest request)
 	{
+		IReadDAO dao = sqlSession.getMapper(IReadDAO.class);
+		
+		// 체크리스트
+		int checkNo = Integer.parseInt(request.getParameter("checkNo"));
+		ChecklistDTO checklist = dao.read(checkNo);	
 
-		return "WEB-INF/view/ReadChecklist.jsp";
+		model.addAttribute("checklist", checklist);
+		
+		// 북마크
+		String logAcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
+		BookmarkDTO bookMark = dao.isBookMark(new BookmarkDTO(logAcNo, checkNo));
+		
+		model.addAttribute("user", "bookmarker");
+		model.addAttribute("bookMark", bookMark);
+		
+		// 수정 기능 추가
+		// 제목을 제대로 못 바꿔주는 이유는?
+		
+		
+		// 시험 삼아서 타이틀 다시 넣어줘봄
+		String title = request.getParameter("title");
+		
+		// 콘솔 출력 테스트
+		//System.out.println(title);
+		
+		bookMark.setTitle(title);
+		//-> 이렇게 하면 일단... 바뀌긴 함...
+		// 근데 따로넣어주는게아니라 저기서 맞춰야 하는거같은데 왜 안될까?
+		
+		
+		dao.updateCheckBookMark(bookMark);
+		// 따로 안 넣어주면 수정이 안됨. 왤까 왜 못 맞출까?
+		
+		// 이러면 제목만 뱉음. -> 일단 추가해서 해결... 이 아니라 추가항목이랑 스티커 못불러온다구 ㅠ^ㅠ 아래거로 함!!
+		//return "WEB-INF/view/ReadChecklist.jsp";
+		
+		// 이러면 메인으로 간단말임,,,? 왜 그럴까? -> checkNo 넘겨줘서 해결!
+		//return "redirect:readcheck.action";
+		return "redirect:readcheck.action?checkNo=" + checkNo;
 	}
+	
+	// 북마크 삭제하기 기능
 }
 
 
