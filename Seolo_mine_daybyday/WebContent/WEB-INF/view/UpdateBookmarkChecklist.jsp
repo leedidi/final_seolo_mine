@@ -22,16 +22,10 @@
 		// 북마크 수정하기 버튼 클릭 시, 북마크 수정 후 해당 북마크 조회로 이동
 		$("#bmUpdateBtn").click(function()
 		{
-			// 컨트롤러에 수정 기능 추가하기
-			// 수정은...되는뎅 1 2 3 이렇게만 됨 왤까? 제목은 잘 받아오는거 같은데..
-			
-			// 확인용...
-			alert($("#title").val());
-			//--> 테스트용 제목 들어가나
-			//--> 들어는 감...근데 xml에서 이거로 못 바꺼주는고 같은데 왜일까?
+			// 확인용
+			//alert($("#title").val());
 			
 			// 추가 후 체크리스트 조회 페이지로 이동
-			//$("#readCheck").attr("action", "updatechecking.action?checkNo=" + $(this).val());
 			$("#updateCheck").attr("action", "updatechecking.action?checkNo=" + $(this).val() + "&acNo=" + $("#acNo").val());
 		});
 		
