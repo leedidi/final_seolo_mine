@@ -205,22 +205,6 @@ public class ChecklistReadController
 		
 	}
 	
-	/*
-	// 공지사항 게시물 수정
-	// → no_no 번호를 jsp 부분에서 히든으로 넣어서 받아옴
-	@RequestMapping(value = "/noticeupdate.action", method = RequestMethod.POST)
-	public String noticeUpdate(NoticeDTO n, HttpSession session)
-	{
-		//○ 세션 확인: 관리자 로그인 정보가 없을 시 → 로그인 페이지로 
-		if(session.getAttribute("adminLogin") == null)
-			return "redirect:adminloginform.action";
-
-		INoticeDAO dao = sqlSession.getMapper(INoticeDAO.class);
-		dao.modify(n);
-
-		return "redirect:noticeview.action?no_no=" + n.getNo_no();
-	}
-	*/
 	
 	// 북마크 수정하기 기능
 	@RequestMapping(value = "/updatechecking.action", method = RequestMethod.GET)
@@ -244,7 +228,6 @@ public class ChecklistReadController
 		// 수정 기능 추가
 		// 제목을 제대로 못 바꿔주는 이유는?
 		
-		
 		// 시험 삼아서 타이틀 다시 넣어줘봄
 		String title = request.getParameter("title");
 		
@@ -254,7 +237,6 @@ public class ChecklistReadController
 		bookMark.setTitle(title);
 		//-> 이렇게 하면 일단... 바뀌긴 함...
 		// 근데 따로넣어주는게아니라 저기서 맞춰야 하는거같은데 왜 안될까?
-		
 		
 		dao.updateCheckBookMark(bookMark);
 		// 따로 안 넣어주면 수정이 안됨. 왤까 왜 못 맞출까?
