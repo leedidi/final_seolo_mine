@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.seolo.admin.INoticeDAO;
-import com.seolo.admin.NoticeDTO;
 import com.seolo.dto.BookmarkDTO;
 import com.seolo.dto.ChecklistDTO;
 import com.seolo.dto.LocalDTO;
@@ -174,7 +173,7 @@ public class ChecklistReadController
 				
 			}
 			
-			
+			model.addAttribute("dongNo", dongNo);
 			model.addAttribute("localList", localList);
 			
 			return "WEB-INF/view/ReadLocal.jsp";
@@ -182,6 +181,7 @@ public class ChecklistReadController
 	
 	}
 	
+
 	// 북마크 수정하기 폼으로 이동
 	@RequestMapping(value = "/updatecheck.action", method = RequestMethod.GET)
 	public String UpdateBookmarkform(Model model, HttpSession session, HttpServletRequest request)
@@ -195,8 +195,8 @@ public class ChecklistReadController
 		model.addAttribute("checklist", checklist);
 		
 		// 북마크
-		String logAcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
-		BookmarkDTO bookMark = dao.isBookMark(new BookmarkDTO(logAcNo, checkNo));
+		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
+		BookmarkDTO bookMark = dao.isBookMark(new BookmarkDTO(AcNo, checkNo));
 		
 		model.addAttribute("user", "bookmarker");
 		model.addAttribute("bookMark", bookMark);
@@ -206,7 +206,7 @@ public class ChecklistReadController
 	}
 	
 	
-	// 북마크 수정하기 기능
+	// 북마크 체크리스트 수정하기 기능
 	@RequestMapping(value = "/updatechecking.action", method = RequestMethod.GET)
 	public String UpdateBookmark(Model model, HttpSession session, HttpServletRequest request)
 	{
@@ -219,8 +219,8 @@ public class ChecklistReadController
 		model.addAttribute("checklist", checklist);
 		
 		// 북마크
-		String logAcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
-		BookmarkDTO bookMark = dao.isBookMark(new BookmarkDTO(logAcNo, checkNo));
+		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
+		BookmarkDTO bookMark = dao.isBookMark(new BookmarkDTO(AcNo, checkNo));
 		
 		model.addAttribute("user", "bookmarker");
 		model.addAttribute("bookMark", bookMark);
@@ -230,9 +230,6 @@ public class ChecklistReadController
 		
 		// 시험 삼아서 타이틀 다시 넣어줘봄
 		String title = request.getParameter("title");
-		
-		// 콘솔 출력 테스트
-		//System.out.println(title);
 		
 		bookMark.setTitle(title);
 		//-> 이렇게 하면 일단... 바뀌긴 함...
@@ -249,11 +246,20 @@ public class ChecklistReadController
 		return "redirect:readcheck.action?checkNo=" + checkNo;
 	}
 	
-	// 북마크 삭제하기 기능
-}
+	// 북마크 체크리스트 삭제하기 기능
+	@RequestMapping(value = "/deletechecking.action", method = RequestMethod.GET)
+	public String DeleteBookmark(BookmarkDTO dto, HttpSession session, HttpServletRequest request)
+	{
+		IReadDAO dao = sqlSession.getMapper(IReadDAO.class);
 
-
-
-
-
-
+		// 북마크
+		int checkNo = Integer.parseInt(request.getParameter("checkNo"));
+		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
+		BookmarkDTO bookMark = dao.isBookMark(new BookmarkDTO(AcNo, checkNo));
+		
+		dao.deleteCheckBookMark(dto);
+		
+		return "mychecklistform.action";
+	}
+	
+	}
