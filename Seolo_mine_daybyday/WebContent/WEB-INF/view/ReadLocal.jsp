@@ -47,7 +47,7 @@
 					if (confirm("해당 게시물을 정말 삭제하시겠습니까?"))
 					{
 						alert("삭제 버튼 클릭");
-						alert($(this).val());
+						//alert($(this).val());
 						//$(location).attr("href", "noticedelete.action?no_no=" + $(this).val());
 					}
 				});
