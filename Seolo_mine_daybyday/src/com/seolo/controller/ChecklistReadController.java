@@ -183,7 +183,7 @@ public class ChecklistReadController
 	
 
 	// 북마크 수정하기 폼으로 이동
-	@RequestMapping(value = "/updatecheck.action", method = RequestMethod.GET)
+	@RequestMapping(value = "/updatebookmarkcheck.action", method = RequestMethod.GET)
 	public String UpdateBookmarkform(Model model, HttpSession session, HttpServletRequest request)
 	{
 		IReadDAO dao = sqlSession.getMapper(IReadDAO.class);
@@ -262,4 +262,20 @@ public class ChecklistReadController
 		return "mychecklistform.action";
 	}
 	
+	// 북마크 지역정보 삭제하기 기능
+	@RequestMapping(value = "/deletebookmarklocal.action", method = RequestMethod.GET)
+	public String Deletebookmarklocal(BookmarkDTO dto, HttpSession session, HttpServletRequest request)
+	{
+		IReadDAO dao = sqlSession.getMapper(IReadDAO.class);
+
+		// 북마크
+		int checkNo = Integer.parseInt(request.getParameter("checkNo"));
+		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
+		BookmarkDTO bookMark = dao.isBookMark(new BookmarkDTO(AcNo, checkNo));
+		
+		dao.deleteCheckBookMark(dto);
+		
+		return "mychecklistform.action";
 	}
+	
+}
