@@ -36,22 +36,47 @@
 	
 	// 지역정보가 북마크 되어 있을 시, 북마크 삭제
 	$(function()
-			{	
-				// 삭제 버튼 클릭
-				$("#bookmarkLocalDelete").click(function()
-				{
-					// 테스트
-					//alert("삭제 버튼 클릭");
-					$("#bookmarkLocalDelete").attr("method", "GET");
-					
-					if (confirm("해당 게시물을 정말 삭제하시겠습니까?"))
-					{
-						alert("삭제 버튼 클릭");
-						//alert($(this).val());
-						//$(location).attr("href", "noticedelete.action?no_no=" + $(this).val());
-					}
-				});
-			});
+	{	
+		// 삭제 버튼 클릭
+		$("#bookmarkLocalDelete").click(function()
+		{
+			// 테스트
+			//alert("삭제 버튼 클릭");
+			//alert($(this).val());
+			//alert($("#acNo").val()); -> undifined
+			
+			if (confirm("해당 북마크를 삭제하시겠습니까?"))
+			{
+				$(location).attr("href", "deletebookmarklocal.action?dongNo=" + $(this).val());
+			    //$("#readLocal").attr("method", "GET");
+			    //$("#readLocal").attr("action", "deletebookmarklocal.action?dongNo=" + $(this).val());
+			    
+			    //$("#readLocal").attr("action", "deletebookmarklocal.action?dongNo=" + $(this).val() + "&acNo=" + $("#acNo").val());
+			    //$(location).attr("action", "deletebookmarklocal.action?dongNo=" + $(this).val());
+			    //$(location).attr("action", "mychecklistform.action");
+			}
+			 
+		});
+	});
+	
+	// 삭제 버튼 클릭
+	/*
+	$(function()
+	{
+
+		// 삭제 버튼 클릭
+		$(".btn-danger").click(function()
+		{
+			// 테스트
+			//alert("삭제 버튼 클릭");
+			
+			if (confirm("해당 게시물을 정말 삭제하시겠습니까?"))
+			{
+				$(location).attr("href", "noticedelete.action?no_no=" + $(this).val());
+			}
+		});
+	});
+	*/
 
 	
 	// 지역정보 북마크 삭제 버튼 추가
@@ -75,6 +100,7 @@
 
 		<!-- 폼 시작 -->
 		<form class="needs-validation" novalidate=""  action="" method="post" id="readLocal">
+			<%-- <input type="hidden" id="acNo" value="${ulogAcNo}"> --%>
 			<div class="row">
 				<!-- 본문 우측 영역 -->
 				<div class="col-md-4 order-md-2 mb-4">
@@ -90,10 +116,10 @@
 					</div>
 					
 					<c:if test="${user eq 'bookmarker' }">
-						<button class="btn btn-secondary" style="width: 100%;">북마크 삭제하기</button>
+						<button class="btn btn-secondary" id="bookmarkLocalDelete" value="${dongNo }" style="width: 100%;">북마크 삭제하기</button>
 					</c:if>
 					<c:if test="${user eq 'viewer' }">
-						<button class="btn btn-primary" id="bookmarkLocalDelete" value="${dongNo }" style="width: 100%;">북마크 추가하기</button>
+						<button class="btn btn-primary" style="width: 100%;">북마크 추가하기</button>
 					</c:if>
 
 				</div><!-- 본문 우측 영역 끝 -->

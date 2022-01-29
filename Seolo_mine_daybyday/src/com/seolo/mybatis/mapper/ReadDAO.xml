@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seolo.idao.IReadDAO">
+	
+	<select id="read" resultType="com.seolo.dto.ChecklistDTO">
+		SELECT CHECKNO, ACNO, RESNO, CHECKDATE, TITLE, ROADADDR, GUNO, GUNAME, DONGNO, DONGNAME
+		    , MWOLSE, DEPOSIT, MJEONSE, MMAEMAE, PET_SCORENO, PET_CO, SECURITY_SCORENO, SECURITY_CO
+		    , TRANSPORT_SCORENO, TRANSPORT_CO, HONJAP_SCORENO, HONJAP_CO
+		    , MART, LAUNDRY, HOSPITAL, FOOD, CULTURE, PARK, CONV_CO, GOOD, BAD, ETC, SECRET_CO
+		FROM VIEW_READCHECK
+		WHERE CHECKNO=#{checkNo}
+	</select>
+
+	<select id="scoreList" resultType="com.seolo.dto.ScoreDTO">		<!-- 결과 타입을 맞게 했는지 모르겠네 -->
+		SELECT SCORENO, SCORENAME
+		FROM SCORE
+	</select>
+	
+	<select id="isBookMark" resultType="com.seolo.dto.BookmarkDTO">
+		SELECT CH_B_NO AS CHBNO, CHECK_NO AS CHECKNO, TITLE AS TITLE, AC_NO AS ACNO, TO_CHAR(MARKDATE, 'YYYY-MM-DD') AS MARKDATE
+		FROM CHECK_BOOKMARK
+		WHERE AC_NO=#{acNo} AND CHECK_NO=#{checkNo}
+	</select>
+	
+	<select id="isLocalBookMark" resultType="com.seolo.dto.BookmarkDTO">
+		SELECT LO_B_NO AS LOBNO, DONG_NO AS DONGNO, AC_NO AS ACNO, TO_CHAR(MARKDATE, 'YYYY-MM-DD') AS MARKDATE
+		FROM LOCAL_BOOKMARK
+		WHERE AC_NO=#{acNo} AND DONG_NO=#{dongNo}
+	</select>
+	
+	<select id="listTime" resultType="com.seolo.dto.PlusDTO">
+		SELECT PTIME_NO AS PLUSTIMENO, TITLE AS TIMETITLE, COMMENTS AS TIMECOMMENTS, TIME AS TIME
+		FROM PLUS_TIME
+		WHERE CHECK_NO=#{checkNo}
+	</select>
+	
+	<select id="listScore" resultType="com.seolo.dto.PlusDTO">
+		SELECT PSCORE_NO AS PLUSSCORENO, TITLE AS SCORETITLE, COMMENTS AS SCORECOMMENTS, SCORENO AS SCORENO
+		FROM PLUS_SCORE
+		WHERE CHECK_NO=#{checkNo}
+	</select>
+	
+	<select id="listBookmarkSticker" resultType="java.lang.String">
+		SELECT CONTENT
+		FROM
+		(
+		    SELECT C.CH_TAG_NO AS CHTAGNO, C.CH_B_NO AS CHBNO, S.CONTENT AS CONTENT
+		    FROM CHECKTAG C, STICKER S
+		    WHERE C.CSTICKER_NO=S.CSTICKER_NO(+)
+		    ORDER BY CHTAGNO
+		)
+		WHERE CHBNO=#{chbNo}
+	</select>
+	
+	<select id="listWriterSticker" resultType="java.lang.String">
+		SELECT CONTENT
+		FROM
+		(
+		    SELECT M.MC_TAG_NO AS MCTAGNO, M.CHECK_NO AS CHECKNO, CONTENT AS CONTENT
+		    FROM MYCHECKTAG M, STICKER S
+		    WHERE M.CSTICKER_NO=S.CSTICKER_NO(+)
+		    ORDER BY MCTAGNO
+		)
+		WHERE CHECKNO=#{checkNo}
+	</select>
+	
+	<select id="readLocal" resultType="com.seolo.dto.LocalDTO">
+		SELECT GUNAME, DONGNAME, NVL(ROUND(WOLSEAVG), -1) AS MWOLSE, NVL(ROUND(WOLSEDEPOSITAVG), -1) AS DEPOSIT
+		    , NVL(ROUND(JEONSEAVG), -1) AS MJEONSE, NVL(ROUND(MAEMAEAVG), -1) AS MMAEMAE, NVL(ROUND(SECURITYAVG, 1), -1) AS SECURITY_SCORE
+		    , NVL(ROUND(TRANSPORTAVG, 1), -1) AS TRANSPORT_SCORE, NVL(ROUND(HONJAPAVG, 1), -1) AS HONJAP_SCORE
+		    , NVL(ROUND(CONVENIENCEAVG, 1), -1) AS CONVENIENCE_SCORE, NVL(ROUND(PETAVG, 1), -1) AS PET_SCORE
+		FROM VIEW_REGION
+		WHERE DONGNO=#{dongNo}
+	</select>
+	
+	<select id="listLocalBookmarkSticker" resultType="java.lang.String">
+		SELECT CONTENT
+		FROM
+		(
+		    SELECT L.LO_TAG_NO AS LOTAGNO, L.LO_B_NO AS LOBNO, S.CONTENT AS CONTENT
+		    FROM LOCALTAG L, STICKER S
+		    WHERE L.CSTICKER_NO=S.CSTICKER_NO(+)
+		    ORDER BY LOTAGNO
+		)
+		WHERE LOBNO=#{lobNo}
+	</select>
+	
+	<!-- 북마크 체크리스트 수정 -->
+	<!-- @@@ 요기 title부분에 임의의 String 넣으면 수정은 됨! 구조문제는 아닌듯 근데 #{title}로 바꾸면 못 받아옴 -->
+	<!-- title로 바꾸면 1, 2, 3 이렇게 되는뎅.... acNo를 넣어도마찬가지...이거 CH_B_NO 같기도 하고? 왜일까...? -->
+	<update id="updateCheckBookMark">
+		UPDATE CHECK_BOOKMARK
+		SET TITLE=#{title}
+		WHERE CHECK_NO=#{checkNo} AND AC_NO=#{acNo}
+	</update>
+	
+	<!-- 북마크 체크리스트 삭제 -->
+	<delete id="deleteCheckBookMark">
+		DELETE
+		FROM CHECK_BOOKMARK
+		WHERE CHECK_NO=#{checkNo} AND AC_NO=#{acNo}
+	</delete>
+	
+	<!-- 북마크 지역정보 삭제 -->
+	<delete id="deleteLocalBookMark">
+		DELETE
+		FROM LOCAL_BOOKMARK
+		WHERE DONG_NO=#{dongNo} AND AC_NO=#{acNo}
+	</delete>
+	
+</mapper>
