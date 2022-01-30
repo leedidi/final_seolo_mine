@@ -39,4 +39,7 @@ public interface IReadDAO
 	// 체크리스트 지역정보 삭제
 	public int deleteLocalBookMark(BookmarkDTO dto);
 	
+	// 체크리스트 지역정보 스티커 삭제
+	public int deleteLocalBookMarkSticker(BookmarkDTO dto);
+	
 }

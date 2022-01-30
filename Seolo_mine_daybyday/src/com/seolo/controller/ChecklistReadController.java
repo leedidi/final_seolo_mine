@@ -190,21 +190,20 @@ public class ChecklistReadController
 	{
 		IReadDAO dao = sqlSession.getMapper(IReadDAO.class);
 				
-		// 체크리스트
+		// 체크리스트 정보 받아옴
 		int checkNo = Integer.parseInt(request.getParameter("checkNo"));
-		ChecklistDTO checklist = dao.read(checkNo);	
+		ChecklistDTO cDto = dao.read(checkNo);	
 
-		model.addAttribute("checklist", checklist);
+		model.addAttribute("checklist", cDto);
 		
-		// 북마크
+		// 북마크 정보 받아옴
 		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
-		BookmarkDTO bookMark = dao.isBookMark(new BookmarkDTO(AcNo, checkNo));
+		BookmarkDTO bDto = dao.isBookMark(new BookmarkDTO(AcNo, checkNo));
 		
 		model.addAttribute("user", "bookmarker");
-		model.addAttribute("bookMark", bookMark);
+		model.addAttribute("bookMark", bDto);
 		
 		return "WEB-INF/view/UpdateBookmarkChecklist.jsp";
-		
 	}
 	
 	
@@ -214,32 +213,35 @@ public class ChecklistReadController
 	{
 		IReadDAO dao = sqlSession.getMapper(IReadDAO.class);
 		
-		// 체크리스트
+		// 체크리스트 정보 받아옴
 		int checkNo = Integer.parseInt(request.getParameter("checkNo"));
-		ChecklistDTO checklist = dao.read(checkNo);	
+		ChecklistDTO cDto = dao.read(checkNo);	
 
-		model.addAttribute("checklist", checklist);
+		model.addAttribute("checklist", cDto);
 		
-		// 북마크
+		// 북마크 정보 받아옴
 		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
-		BookmarkDTO bookMark = dao.isBookMark(new BookmarkDTO(AcNo, checkNo));
+		BookmarkDTO bDto = dao.isBookMark(new BookmarkDTO(AcNo, checkNo));
 		
 		model.addAttribute("user", "bookmarker");
-		model.addAttribute("bookMark", bookMark);
+		model.addAttribute("bookMark", bDto);
 		
 		// 수정 기능 추가
+		// 임의로 title 입력 정보 받아옴
 		String title = request.getParameter("title");
 		
-		// title과 AcNo DTO에 넣어줌
-		bookMark.setTitle(title);
-		bookMark.setAcNo(AcNo);
+		// title과 AcNo → BookmarkDTO에 넣어줌
+		bDto.setTitle(title);
+		bDto.setAcNo(AcNo);
 		
-		dao.updateCheckBookMark(bookMark);
+		dao.updateCheckBookMark(bDto);
 		
+		// 해당 북마크 체크리스트로 이동
 		return "redirect:readcheck.action?checkNo=" + checkNo;
 	}
 	
 	// 북마크 체크리스트 삭제하기 기능
+	//@@@ 스티커 삭제부분 추가하기~!
 	@RequestMapping(value = "/deletechecking.action", method = RequestMethod.GET)
 	public String DeleteBookmark(BookmarkDTO dto, HttpSession session, HttpServletRequest request)
 	{
@@ -249,13 +251,16 @@ public class ChecklistReadController
 		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
 		dto.setAcNo(AcNo);
 		
+		// 북마크 체크리스트 삭제
 		dao.deleteCheckBookMark(dto);
 		
 		// 체크리스트 삭제 후 해당 체크리스트 조회하기 위한 checkNo
 		int checkNo = Integer.parseInt(request.getParameter("checkNo"));
 		
+		// 해당 북마크 체크리스트로 이동
 		return "redirect:readcheck.action?checkNo=" + checkNo;
 	}
+	
 	
 	// 북마크 지역정보 삭제하기 기능
 	@RequestMapping(value = "/deletebookmarklocal.action", method = {RequestMethod.GET, RequestMethod.POST})
@@ -267,10 +272,19 @@ public class ChecklistReadController
 		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
 		dto.setAcNo(AcNo);
 		
-		dao.deleteLocalBookMark(dto);
-		
+		// 체크리스트 삭제 후 해당 지역정보 조회하기 위한 dongNo
 		int dongNo = Integer.parseInt(request.getParameter("dongNo"));
 		
+		// 체크리스트 스티커 삭제 위한 lobNo
+		BookmarkDTO lDto = dao.isLocalBookMark(dto);
+		int lobNo = lDto.getLobNo();
+    	dto.setLobNo(lobNo);
+
+		// 북마크 지역정보 및 스티커 삭제
+		dao.deleteLocalBookMark(dto);
+    	dao.deleteLocalBookMarkSticker(lDto);
+		
+		// 해당 북마크 지역정보로 이동
 		return "redirect:readlocal.action?dongNo=" + dongNo;
 	}
 	

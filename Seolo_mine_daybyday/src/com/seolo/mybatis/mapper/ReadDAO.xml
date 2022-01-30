@@ -89,8 +89,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<!-- 북마크 체크리스트 수정 -->
-	<!-- @@@ 요기 title부분에 임의의 String 넣으면 수정은 됨! 구조문제는 아닌듯 근데 #{title}로 바꾸면 못 받아옴 -->
-	<!-- title로 바꾸면 1, 2, 3 이렇게 되는뎅.... acNo를 넣어도마찬가지...이거 CH_B_NO 같기도 하고? 왜일까...? -->
+	<!-- @ 에러: 요기 title부분에 임의의 String 넣으면 수정은 됨! 구조문제는 아닌듯 근데 #{title}로 바꾸면 못 받아옴 -->
+	<!-- → 컨트롤러에서 임의로 title 넣어주면 수정 가능. 다만 원래는 알아서 매칭해줘야하는데 안 되는듯... -->
 	<update id="updateCheckBookMark">
 		UPDATE CHECK_BOOKMARK
 		SET TITLE=#{title}
@@ -109,6 +109,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE
 		FROM LOCAL_BOOKMARK
 		WHERE DONG_NO=#{dongNo} AND AC_NO=#{acNo}
+	</delete>
+	
+	<!-- 북마크 지역정보 스티커 삭제 -->
+	<delete id="deleteLocalBookMarkSticker">
+		DELETE 
+		FROM LOCALTAG
+		WHERE LO_B_NO=#{lobNo}	
 	</delete>
 	
 </mapper>
