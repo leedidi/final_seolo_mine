@@ -251,8 +251,11 @@ public class ChecklistReadController
 		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
 		dto.setAcNo(AcNo);
 		
-		// 북마크 체크리스트 삭제
+		// 북마크 삭제 위한 chbNo
+		
+		// 북마크 체크리스트 및 스티커 삭제
 		dao.deleteCheckBookMark(dto);
+		//* 스티커 삭제 추가
 		
 		// 체크리스트 삭제 후 해당 체크리스트 조회하기 위한 checkNo
 		int checkNo = Integer.parseInt(request.getParameter("checkNo"));
@@ -272,10 +275,10 @@ public class ChecklistReadController
 		String AcNo = ((PersonalDTO)session.getAttribute("userLogin")).getAc_No();
 		dto.setAcNo(AcNo);
 		
-		// 체크리스트 삭제 후 해당 지역정보 조회하기 위한 dongNo
+		// 북마크 삭제 후 해당 지역정보 조회하기 위한 dongNo
 		int dongNo = Integer.parseInt(request.getParameter("dongNo"));
 		
-		// 체크리스트 스티커 삭제 위한 lobNo
+		// 북마크 스티커 삭제 위한 lobNo
 		BookmarkDTO lDto = dao.isLocalBookMark(dto);
 		int lobNo = lDto.getLobNo();
     	dto.setLobNo(lobNo);
