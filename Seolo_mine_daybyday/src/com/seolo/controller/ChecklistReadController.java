@@ -258,15 +258,13 @@ public class ChecklistReadController
 		// 북마크 스티커 테이블 역시 삭제
 		ArrayList<String> checkSticker = dao.selectCheckStiker(chbNo);
 		
+		// 값 하나씩 증가하며 arraylist에 들어있는 csticker_no 가 해당되는 숫자인 sticker 테이블의 해당 값 지워줌
 		for (int i=0; i<checkSticker.size(); i++)
 		{
 			// 만약 해당 스티커가(csticker_no가 해당 북마크 체크리스트에서만 사용된다면 북마크 삭제 시 해당 스티커도 삭제
 			if (dao.selectStikerCheckOne(Integer.parseInt(checkSticker.get(i)))==1)
 			{
-				// 값 하나씩 읽어주면서
-				// arraylist에 들어있는 csticker_no 가 해당되는 숫자인 sticker 테이블의 해당 값 지워주기
-				
-				// 해당 i를 dto 스티커넘버에 넣어줌 
+				// 해당 i를 dto csticker_no에 넣어줌 
 				dto.setCstickerNo(Integer.parseInt(checkSticker.get(i)));
 				// 해당 스티커를 제거해줌
 				dao.deleteSticker(dto);
@@ -303,15 +301,13 @@ public class ChecklistReadController
 		// 북마크 스티커 테이블 역시 삭제
 		ArrayList<String> checkSticker = dao.selectLocalStiker(lobNo);
 		
+		// 값 하나씩 증가하며 arraylist에 들어있는 csticker_no 가 해당되는 숫자인 sticker 테이블의 해당 값 지워주기
 		for (int i=0; i<checkSticker.size(); i++)
 		{
 			// 만약 해당 스티커가(csticker_no가 해당 북마크 지역정보에서만 사용된다면 북마크 삭제 시 해당 스티커도 삭제
 			if (dao.selectStikerOne(Integer.parseInt(checkSticker.get(i)))==1)
 			{
-				// 값 하나씩 읽어주면서
-				// arraylist에 들어있는 csticker_no 가 해당되는 숫자인 sticker 테이블의 해당 값 지워주기
-				
-				// 해당 i를 dto 스티커넘버에 넣어줌 
+				// 해당 i를 dto csticker_no에 넣어줌 
 				dto.setCstickerNo(Integer.parseInt(checkSticker.get(i)));
 				// 해당 스티커를 제거해줌
 				dao.deleteSticker(dto);
