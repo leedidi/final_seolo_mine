@@ -318,7 +318,7 @@ public class ChecklistReadController
 		dao.deleteLocalBookMarkSticker(lDto);
 		dao.deleteLocalBookMark(dto);
     	
-		// 북마크 삭제 후 해당 지역정보 조회하기 위한 dongNo
+		// 북마크 삭제 후 해당 지역정보 조회하기 위한 dongNo 제공
 		int dongNo = Integer.parseInt(request.getParameter("dongNo"));
 		
 		// 해당 북마크 지역정보로 이동
