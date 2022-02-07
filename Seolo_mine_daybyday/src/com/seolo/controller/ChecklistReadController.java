@@ -309,7 +309,7 @@ public class ChecklistReadController
 			{
 				// 해당 i를 dto csticker_no에 넣어줌 
 				dto.setCstickerNo(Integer.parseInt(checkSticker.get(i)));
-				// 해당 스티커를 제거해줌
+				// 해당 스티커를 제거함
 				dao.deleteSticker(dto);
 			}
 		}
