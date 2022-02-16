@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seolo.idao.IReportRunDAO">
+
+	<update id="approval">   
+        UPDATE REPORT_CHECK
+		SET STATUS_NO = 1, CONFIRMDATE = SYSDATE, AD_ID = #{ad_id}
+		WHERE RPCHECK_NO=#{rpcheck_no}
+	</update>
+		
+	<update id="reject">
+		UPDATE REPORT_CHECK
+		SET STATUS_NO = 2, CONFIRMDATE = SYSDATE, AD_ID = #{ad_id}
+		WHERE RPCHECK_NO=#{rpcheck_no}
+	</update>	
+	
+	<update id="fake">
+		UPDATE REPORT_CHECK
+		SET STATUS_NO = 3, CONFIRMDATE = SYSDATE, AD_ID = #{ad_id}
+		WHERE RPCHECK_NO=#{rpcheck_no}
+	</update>	
+	
+	<delete id="delete">
+		DELETE
+		FROM REPORT_CHECK
+		WHERE RPCHECK_NO=#{rpcheck_no}
+	</delete>
+	
+</mapper>
