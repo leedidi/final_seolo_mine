@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.seolo.idao.IIntroductionDAO">
+ 
+ 	<select id="view" resultType="com.seolo.dto.IntroductionDTO">
+	SELECT IN_NO, AD_ID, CONTENT
+	FROM INTRODUCTION
+	WHERE IN_NO = 1
+ 	</select>
+ 
+ 	<update id="modify">
+ 	UPDATE INTRODUCTION
+	SET CONTENT = #{content}
+	WHERE IN_NO = 1
+ 	</update>
+ </mapper>
