@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.seolo.idao.IChecklistDAO">
+	<!-- 해당 인터페이스(ISampleDAO)의 각각 메소드에 어떤 쿼리문(sql)을 매칭시켜줄지 -->
+
+<!-- 널로 구성되는 애는 '${tel}' 이걸로. 
+	숫자이면 홑따옴표만 없애기 -->
+	    
+
+	<!-- 기본적으로 입력받는 사항 -->	
+	<insert id="add">
+		INSERT INTO CHECKLIST(CHECK_NO, AC_NO, RES_NO, DONG_NO, CHECKDATE, TITLE, ROADADDR)
+		VALUES(CHECKSEQ.NEXTVAL, #{acNo}, #{resNo}, #{dongNo}, SYSDATE, #{title}, #{roadAddr})		
+	</insert>
+	
+	<insert id="addWolse">
+		INSERT INTO WOLSE(CHECK_NO, MWOLSE, DEPOSIT) VALUES(#{checkNo}, #{mWolse}, #{deposit})
+	</insert>
+		
+	<insert id="addJeonse">
+		INSERT INTO JEONSE(CHECK_NO, MJEONSE) VALUES(#{checkNo}, #{mJeonse})
+	</insert>
+	
+	<insert id="addMaemae">
+		INSERT INTO MAEMAE(CHECK_NO, MMAEMAE) VALUES(#{checkNo}, #{mMaemae})
+	</insert>
+	
+	
+	<insert id="addPet">
+		INSERT INTO PET(CHECK_NO, SCORENO) VALUES(#{checkNo}, #{pet_scoreNo})
+	</insert>
+	
+	<update id="addPetco">
+		UPDATE PET
+		SET COMMENTS = #{pet_co}
+		WHERE CHECK_NO = #{checkNo}	
+	</update>
+	
+	
+	<insert id="addSecurity">
+		INSERT INTO SECURITY(CHECK_NO, SCORENO) VALUES(#{checkNo}, #{security_scoreNo})
+	</insert>
+	
+	<update id="addSecurityco">
+		UPDATE SECURITY
+		SET COMMENTS = #{security_co}
+		WHERE CHECK_NO = #{checkNo}	
+	</update>
+	
+	
+	<insert id="addTransport">
+		INSERT INTO TRANSPORT(CHECK_NO, SCORENO) VALUES(#{checkNo}, #{transport_scoreNo})
+	</insert>
+	
+	<update id="addTransportco">
+		UPDATE TRANSPORT
+		SET COMMENTS= #{transport_co}
+		WHERE CHECK_NO = #{checkNo}	
+	</update>
+	
+	
+	<insert id="addHonjap">
+		INSERT INTO HONJAP(CHECK_NO, SCORENO) VALUES(#{checkNo}, #{honjap_scoreNo})
+	</insert>
+	
+	<update id="addHonjapco">
+		UPDATE HONJAP
+		SET COMMENTS = #{honjap_co}
+		WHERE CHECK_NO = #{checkNo}
+	</update>
+	
+	
+	<insert id="addContentG">
+		INSERT INTO CONTENT(CHECK_NO, GOOD) VALUES(#{checkNo}, #{good})
+	</insert>
+	
+	<update id="addContentB">
+		UPDATE CONTENT
+		SET BAD = #{bad}
+		WHERE CHECK_NO = #{checkNo}
+	</update>
+	
+	<update id="addContentE">
+		UPDATE CONTENT
+		SET ETC = #{etc}
+		WHERE CHECK_NO = #{checkNo}	
+	</update>
+	
+	
+	<insert id="addSecret">
+		INSERT INTO SECRET_CONTENT(CHECK_NO, COMMENTS) VALUES(#{checkNo}, #{secret_co})
+	</insert>
+	
+	
+	<insert id="addConvenience">
+		INSERT INTO CONVENIENCE(CHECK_NO, MART, LAUNDRY, HOSPITAL, FOOD, CULTURE, PARK) 
+		VALUES(#{checkNo}, #{mart}, #{laundry}, #{hospital}, #{food}, #{culture}, #{park})
+	</insert>
+	
+	<update id="addConvenienceco">
+		UPDATE CONVENIENCE
+		SET COMMENTS = #{conv_co}
+		WHERE CHECK_NO = #{checkNo}
+	</update>
+	
+	<select id="searchDong" resultType="java.lang.Integer">
+		SELECT DONG_NO FROM DONG WHERE DONGNAME = #{dongName}
+	</select>
+	
+	
+	<select id="searchDongName" resultType="java.lang.String">
+		SELECT DONGNAME FROM DONG WHERE DONG_NO = #{dongNo}
+	</select>
+	
+	
+	<select id="checkdong" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS COUNT FROM DONG WHERE DONG_NO = #{dongNo}
+	</select>
+	
+	
+	<select id="scoreList" resultType="com.seolo.dto.ScoreDTO">		<!-- 결과 타입을 맞게 했는지 모르겠네 -->
+		SELECT SCORENO, SCORENAME FROM SCORE
+	</select>
+	
+	
+	<select id="residenceList" resultType="com.seolo.dto.ChecklistDTO">	<!-- 결과 타입을 맞게 했는지 모르겠네 -->
+		SELECT RES_NO, RESIDENCENAME FROM RESIDENCE
+	</select>
+	
+	
+	<!-- 지금 입력하는 체크리스트 번호 알아내기.. 가장 최근에 인서트된 걸 찾는다. -->
+	<select id="searchCheckNo" resultType="java.lang.Integer">
+		SELECT CHECK_NO
+		FROM
+		(
+		    SELECT CHECK_NO, CHECKDATE, RANK() OVER(ORDER BY CHECKDATE DESC) AS FAST
+		    FROM CHECKLIST
+		    WHERE AC_NO=#{acNo}
+		)T
+		WHERE T.FAST =1
+	</select>
+	
+	<!-- 체크리스트 삭제하기 -->
+	<delete id="deletechecklist1">
+		DELETE FROM WOLSE
+		WHERE CHECK_NO=#{checkNo}
+	</delete>
+	<delete id="deletechecklist2">
+		DELETE FROM TRANSPORT
+		WHERE CHECK_NO=#{checkNo}
+	</delete>
+	<delete id="deletechecklist3">	
+		DELETE FROM SECRET_CONTENT
+		WHERE CHECK_NO=#{checkNo}
+	</delete>	
+	<delete id="deletechecklist4">
+		DELETE FROM MYCHECKTAG
+		WHERE CHECK_NO=#{checkNo}
+	</delete>
+	<delete id="deletechecklist5">
+		DELETE FROM MAEMAE
+		WHERE CHECK_NO=#{checkNo}
+	</delete>
+	<delete id="deletechecklist6">
+		DELETE FROM JEONSE
+		WHERE CHECK_NO=#{checkNo}
+	</delete>
+	<delete id="deletechecklist7">
+		DELETE FROM CONTENT
+		WHERE CHECK_NO=#{checkNo}
+	</delete>
+	<delete id="deletechecklist8">
+		DELETE FROM SECURITY
+		WHERE CHECK_NO=#{checkNo}
+	</delete>
+	<!-- <delete id="deletechecklist9">
+		DELETE FROM HONJAP
+		WHERE CHECK_NO=#{checkNo}
+	</delete> -->
+	<delete id="deletechecklist9">
+		DELETE FROM CHECKLIST
+		WHERE CHECK_NO=#{checkNo}
+	</delete>
+	
+	<!-- 점수 추가 리스트 -->
+	<!-- 
+	<select id="scoreList" resultType="com.seolo.dto.PlusDTO">
+		SELECT PTIME_NO, CHECK_NO, TITLE, COMMENTS, TIME
+		FROM PLUS_TIME
+		WHERE CHECK_NO = #{checkNo}
+		ORDER BY PTIME_NO DESC
+	</select>
+	 -->
+	<!-- 시간 추가 리스트 -->
+	<!-- 
+	<select id="timeList" resultType="com.seolo.dto.PlusDTO">
+		SELECT PSCORE_NO, CHECK_NO, TITLE, COMMENTS, SCORENO
+		FROM PLUS_SCORE
+		WHERE CHECK_NO = #{checkNo}
+		ORDER BY PSCORE_NO DESC
+	</select>	
+	-->
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
